@@ -7,7 +7,7 @@ use std::collections::HashSet;
 fn go_to((x, y): (usize, usize), instr: &String) -> Vec<(usize, usize)> {
     let vals: Vec<&str> = instr.split_whitespace().collect();
     let num: usize = vals[1].parse().unwrap();
-    match vals[0] {
+    match vals[0] { // :thumbsup:
         "R" => (1..num+1).map(|i| (x+i, y)).collect(),
         "L" => (1..num+1).map(|i| (x-i, y)).collect(),
         "U" => (1..num+1).map(|i| (x, y+i)).collect(),
@@ -23,11 +23,11 @@ fn go_to((x, y): (usize, usize), instr: &String) -> Vec<(usize, usize)> {
 fn new_value_both(x_t: i32, x_diff: i32) -> usize {
     let mut x_r = x_t;
     match x_diff {
-        -1 => {x_r -= 1;},
-        1 => {x_r += 1;},
-        -2 => {x_r -= 1;},
-        2 => {x_r += 1;},
-        _ => {x_r = x_r;},
+        -1 => x_r -= 1,
+        1 => x_r += 1,
+        -2 => x_r -= 1,
+        2 => x_r += 1,
+        _ => x_r = x_r,
     }
     x_r as usize
 }

@@ -10,7 +10,7 @@ fn day6(lines: std::io::Lines<io::BufReader<File>>) {
             let vec: Vec<char> = ip.chars().collect();
             for i in 14..vec.len() {
                 let mut uniq = HashSet::new();
-                if vec[i-14..i].into_iter().all(move |x| uniq.insert(x)) {
+                if vec[i-14..i].into_iter().all(move |x| uniq.insert(x)) { // Nice!
                     println!("Result {}", i);
                     break;
                 }

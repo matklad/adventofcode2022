@@ -21,7 +21,22 @@ fn day2(lines: std::io::Lines<io::BufReader<File>>) {
     for line in lines {
         if let Ok(ip) = line {
             let len = ip.len();
+            // Using a hash map here is a bit wasteful, I'd
+            let score = match &ip[len - 1 ..] {
+                "X" => 1,
+                "Y" => 2,
+                "Z" => 3,
+                _ => panic!("bad letter: {}", ip)
+            };
             let score = column2.get(&ip[len-1..]).unwrap();
+
+            // Could compress a bit
+            result += if ... {} else if ... {} else {}
+            // Alternatively, a match would also work here
+            result += match ip.as_str() {
+                "A Y" | "B Z" | "C X" => score + 6
+                ...
+            }
             if victories.contains(&ip.as_str()) {
                 result += score + 6;
             }
@@ -70,7 +85,7 @@ fn day2_part2(lines: std::io::Lines<io::BufReader<File>>) {
             let first = &ip[0..1];
             let score_last = column2.get(last).unwrap();
 
-            if last.eq("Z") {
+            if last.eq("Z") { // Still not Java, last == "Z"
                 result += victories.get(first).unwrap() + score_last;
             }
             if last.eq("Y") {
@@ -86,8 +101,17 @@ fn day2_part2(lines: std::io::Lines<io::BufReader<File>>) {
 
 
 fn main() {
+    // almost great :)
     if let Ok(lines) = read_lines("./inputs/day2.txt") {
         day2_part2(lines);
+    }
+    // Do this insetad:
+    match read_lines("./inputs/day2.txt") {
+        Ok(lines) => day2_part2(lines),
+        Err(err) => {
+            eprintln!("error: {err}");
+            std::process::exit(1);
+        }
     }
 }
 

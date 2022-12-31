@@ -20,12 +20,12 @@ struct Fil {
 
 
 impl Dir {
-    pub fn from(name: &String, parent: Option<usize>) -> Self {
+    pub fn from(name: String, parent: Option<usize>) -> Self {
         Dir {
-            name: name.clone(),
+            name, // it's idiomatic to push clones to the call site
             files: HashMap::new(),
             dirs: HashMap::new(),
-            parent: parent,
+            parent,
         }
     }
 
@@ -42,8 +42,10 @@ impl Dir {
 
     pub fn files_sizes(& self) -> i32 {
         let mut result: i32 = 0;
+        // 1. Don't clone, use iter: `for (_, value) in &self.files`
+        // 2. self.files.values().map(|it| it.size).sum()
         for (_, value) in self.files.clone().into_iter() {
-            result += value.size; 
+            result += value.size;
         }
         result
     }
@@ -51,6 +53,7 @@ impl Dir {
 
 
 fn parse_file(line: & String) -> Fil {
+    let (name, size) = line.split_once(" ").unwrap();
     let vals: Vec<&str> = line.split_whitespace().collect();
     let size: i32 = vals[0].parse().unwrap();
     Fil { name: vals[1].to_string(), size: size }
@@ -58,15 +61,23 @@ fn parse_file(line: & String) -> Fil {
 
 #[derive(Debug)]
 enum Action {
-    GoToChild, 
+    GoToChild { dest: String }
     GoToParent,
-    AddFile,
+    AddFile { name: String, size: u32 }
     AddDir,
     SkipLs,
 }
 
 
 fn parse_input(s: &String) -> (Action, String) {
+    if let Some(dest) = s.strip_prefix("$ cd ") {
+        return match dest {
+            ".." => ...
+            "/" => ...
+            _ => ...
+        }
+    }
+
     if s.eq("$ cd ..") {
         (Action::GoToParent, String::new())
     } else if s.eq("$ cd /") {
@@ -82,10 +93,10 @@ fn parse_input(s: &String) -> (Action, String) {
     }
 }
 
-
+// &Vec<T> is a "useless type", use &[T] instead as that's strictly more general.
 fn calculate_sizes(dirs: &Vec<Dir>, idx: usize, results: &mut Vec<i32>) {
     let mut result: i32 = dirs[idx].files_sizes();
-    for (_, c) in dirs[idx].dirs.clone().into_iter() {
+    for (_, c) in dirs[idx].dirs.clone().into_iter() { // ditto, no clone is needed
         calculate_sizes(dirs, c, results);
         result += results[c];
     }
@@ -128,11 +139,11 @@ fn day7(lines: std::io::Lines<io::BufReader<File>>) {
 
     // Find the answers to the puzzle
     println!("Part 1: {}", results.iter().filter(|x| *x < &100000).sum::<i32>());
-    
+
     let space_remaining: i32 = 70_000_000 - files_sizes.iter().sum::<i32>();
     let space_needed = 30_000_000 - space_remaining;
 
-    println!("Part 2: {}", results.iter().filter(|i| (*i >= &space_needed)).min().unwrap());
+    println!("Part 2: {}", results.iter().filter(|&i| i >= &space_needed).min().unwrap());
 }
 
 fn main() {

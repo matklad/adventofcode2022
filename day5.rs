@@ -27,7 +27,7 @@ fn parse_stacks(vec: &mut Vec<String>) -> Vec<Vec<String>> {
     result
 }
 
-fn parse_instructions(s: &str) -> Vec<i32> {
+fn parse_instructions(s: &str) -> Vec<i32> { // again, want to use (u32, u32, u32) here to avoid allocations
     s.replace("move ", "").replace("from ", "").replace("to ", "")
         .split_whitespace()
         .map(|s| s.parse().expect("parse error"))
@@ -64,10 +64,10 @@ fn day5(lines: std::io::Lines<io::BufReader<File>>) {
     }
     // Print the contents of the stacks
     for sub_vec in &stacks {
-        print!("{:?}\n", sub_vec);
+        print!("{sub_vec:?}\n");
     }
     println!("{}", stacks.into_iter().map(|v| v[v.len() - 1].clone()).collect::<String>());
-    
+
 }
 
 fn main() {

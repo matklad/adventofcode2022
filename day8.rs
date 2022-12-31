@@ -45,7 +45,7 @@ fn len_sorted(w: &Vec<i32>) -> i32 {
     if size <= 1 {
         return res;
     }
-    let mut prev: i32 = w[0];
+    let mut prev: i32 = w[0]; // prev is unused I think?
     for i in 1..size {
         if (w[i] < w[0]) {
             res += 1;
@@ -68,6 +68,7 @@ fn fill_scentic_score(ar: & Vec<Vec<i32>>, score: &mut Vec<Vec<i32>>) {
     let size: usize = ar.len();
     for i in 0..size {
         for j in 0..size {
+            // I believe this is a quadratic solution, a linear one is possible using a stack. 
             right = len_sorted(&ar[i][j..size].to_vec());
             down = len_sorted(&ar[i..size].iter().map(|v| v[j]).collect::<Vec<i32>>());
             left = len_sorted(&ar[i][0..j+1].iter().copied().rev().collect());
@@ -79,7 +80,7 @@ fn fill_scentic_score(ar: & Vec<Vec<i32>>, score: &mut Vec<Vec<i32>>) {
 
 
 fn day8(lines: std::io::Lines<io::BufReader<File>>) {
-    let mut matrix: Vec<Vec<i32>> = Vec::new();
+    let mut matrix: Vec<Vec<i32>> = Vec::new(); // could use u8 for numbers
     for line in lines {
         if let Ok(ip) = line {
             let nums = ip.chars().map(|s| s.to_string().parse::<i32>().unwrap()).collect::<Vec<i32>>();
